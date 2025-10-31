@@ -1,7 +1,6 @@
 """Pacman, classic arcade game.
 
 Exercises
-
 1. Change the board.
 2. Change the number of ghosts.
 3. Change where pacman starts.
@@ -10,13 +9,12 @@ Exercises
 """
 
 from random import choice
-from turtle import *
-
+import turtle as t  # ✅ evita import *
 from freegames import floor, vector
 
 state = {'score': 0}
-path = Turtle(visible=False)
-writer = Turtle(visible=False)
+path = t.Turtle(visible=False)
+writer = t.Turtle(visible=False)
 aim = vector(5, 0)
 pacman = vector(-40, -80)
 ghosts = [
@@ -57,11 +55,9 @@ def square(x, y):
     path.goto(x, y)
     path.down()
     path.begin_fill()
-
-    for count in range(4):
+    for _ in range(4):
         path.forward(20)
         path.left(90)
-
     path.end_fill()
 
 
@@ -69,19 +65,16 @@ def offset(point):
     """Return offset of point in tiles."""
     x = (floor(point.x, 20) + 200) / 20
     y = (180 - floor(point.y, 20)) / 20
-    index = int(x + y * 20)
-    return index
+    return int(x + y * 20)
 
 
 def valid(point):
     """Return True if point is valid in tiles."""
     index = offset(point)
-
     if tiles[index] == 0:
         return False
 
     index = offset(point + 19)
-
     if tiles[index] == 0:
         return False
 
@@ -90,17 +83,14 @@ def valid(point):
 
 def world():
     """Draw world using path."""
-    bgcolor('black')
+    t.bgcolor('black')
     path.color('blue')
 
-    for index in range(len(tiles)):
-        tile = tiles[index]
-
+    for index, tile in enumerate(tiles):
         if tile > 0:
             x = (index % 20) * 20 - 200
             y = 180 - (index // 20) * 20
             square(x, y)
-
             if tile == 1:
                 path.up()
                 path.goto(x + 10, y + 10)
@@ -112,13 +102,12 @@ def move():
     writer.undo()
     writer.write(state['score'])
 
-    clear()
+    t.clear()
 
     if valid(pacman + aim):
         pacman.move(aim)
 
     index = offset(pacman)
-
     if tiles[index] == 1:
         tiles[index] = 2
         state['score'] += 1
@@ -126,9 +115,9 @@ def move():
         y = 180 - (index // 20) * 20
         square(x, y)
 
-    up()
-    goto(pacman.x + 10, pacman.y + 10)
-    dot(20, 'yellow')
+    t.up()
+    t.goto(pacman.x + 10, pacman.y + 10)
+    t.dot(20, 'yellow')
 
     for point, course in ghosts:
         if valid(point + course):
@@ -141,20 +130,19 @@ def move():
                 vector(0, -5),
             ]
             plan = choice(options)
-            course.x = plan.x
-            course.y = plan.y
+            course.x, course.y = plan.x, plan.y
 
-        up()
-        goto(point.x + 10, point.y + 10)
-        dot(20, 'red')
+        t.up()
+        t.goto(point.x + 10, point.y + 10)
+        t.dot(20, 'red')
 
-    update()
+    t.update()
 
-    for point, course in ghosts:
+    for point, _ in ghosts:
         if abs(pacman - point) < 20:
             return
 
-    ontimer(move, 100)
+    t.ontimer(move, 100)
 
 
 def change(x, y):
@@ -164,17 +152,17 @@ def change(x, y):
         aim.y = y
 
 
-setup(420, 420, 370, 0)
-hideturtle()
-tracer(False)
+t.setup(420, 420, 370, 0)
+t.hideturtle()
+t.tracer(False)
 writer.goto(160, 160)
 writer.color('white')
 writer.write(state['score'])
-listen()
-onkey(lambda: change(5, 0), 'Right')
-onkey(lambda: change(-5, 0), 'Left')
-onkey(lambda: change(0, 5), 'Up')
-onkey(lambda: change(0, -5), 'Down')
+t.listen()
+t.onkey(lambda: change(5, 0), 'Right')
+t.onkey(lambda: change(-5, 0), 'Left')
+t.onkey(lambda: change(0, 5), 'Up')
+t.onkey(lambda: change(0, -5), 'Down')
 world()
 move()
-done()
+t.done()
