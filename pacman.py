@@ -9,7 +9,7 @@ Exercises
 """
 
 from random import choice
-import turtle as t  # ✅ evita import *
+import turtle as t  # uso correcto (sin import *)
 from freegames import floor, vector
 
 state = {'score': 0}
@@ -23,6 +23,7 @@ ghosts = [
     [vector(100, 160), vector(0, -5)],
     [vector(100, -160), vector(-5, 0)],
 ]
+
 # fmt: off
 tiles = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -115,9 +116,10 @@ def move():
         y = 180 - (index // 20) * 20
         square(x, y)
 
+    # 🟢 Pac-Man verde
     t.up()
     t.goto(pacman.x + 10, pacman.y + 10)
-    t.dot(20, 'yellow')
+    t.dot(20, 'green')
 
     for point, course in ghosts:
         if valid(point + course):
@@ -132,9 +134,10 @@ def move():
             plan = choice(options)
             course.x, course.y = plan.x, plan.y
 
+        # 💗 Fantasmas rosas
         t.up()
         t.goto(point.x + 10, point.y + 10)
-        t.dot(20, 'red')
+        t.dot(20, 'pink')
 
     t.update()
 
